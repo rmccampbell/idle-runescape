@@ -318,11 +318,21 @@ offset_top = 397.0
 offset_right = 983.0
 offset_bottom = 657.0
 
-[node name="InventoryLabel" type="Label" parent="InventoryContainerOuter"]
+[node name="HBoxContainer" type="HBoxContainer" parent="InventoryContainerOuter"]
 layout_mode = 2
+
+[node name="InventoryLabel" type="Label" parent="InventoryContainerOuter/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 65
 text = "Items"
 horizontal_alignment = 1
+
+[node name="X10Button" type="Button" parent="InventoryContainerOuter/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+text = "10x"
 
 [node name="InventoryContainer" type="GridContainer" parent="InventoryContainerOuter"]
 layout_mode = 2
@@ -513,19 +523,9 @@ unique_name_in_owner = true
 wait_time = 2.0
 autostart = true
 
-[node name="X10Button" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 944.0
-offset_top = 399.0
-offset_right = 989.0
-offset_bottom = 439.0
-toggle_mode = true
-text = "10x"
-
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("21_sdine")
 autoplay = true
 
+[connection signal="toggled" from="InventoryContainerOuter/HBoxContainer/X10Button" to="." method="_on_x10_button_toggled"]
 [connection signal="timeout" from="HealTimer" to="." method="_on_heal_timer_timeout"]
-[connection signal="toggled" from="X10Button" to="." method="_on_x10_button_toggled"]
