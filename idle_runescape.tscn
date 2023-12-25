@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cebwc8kj70yhr"]
+[gd_scene load_steps=23 format=3 uid="uid://cebwc8kj70yhr"]
 
 [ext_resource type="Theme" uid="uid://c7m84smbp6txn" path="res://assets/theme.tres" id="1_2meuk"]
 [ext_resource type="Texture2D" uid="uid://tcxnyv8erlkk" path="res://assets/RuneScape_2_logo.png" id="1_wc2h2"]
@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://csyrotmxgpsuj" path="res://assets/Bronze bar.png" id="16_qxehu"]
 [ext_resource type="Texture2D" uid="uid://bxf7omdwnqxvh" path="res://assets/Logs.png" id="17_b7bhd"]
 [ext_resource type="Texture2D" uid="uid://crsrscy3y83jt" path="res://assets/Raw shrimps.png" id="18_vkyi3"]
+[ext_resource type="AudioStream" uid="uid://bypvfbdwrh241" path="res://assets/music/Scape_Santa.ogg" id="21_sdine"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_yy5kp"]
 font = ExtResource("3_6eivg")
@@ -521,6 +522,10 @@ offset_right = 989.0
 offset_bottom = 439.0
 toggle_mode = true
 text = "10x"
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("21_sdine")
+autoplay = true
 
 [connection signal="timeout" from="HealTimer" to="." method="_on_heal_timer_timeout"]
 [connection signal="toggled" from="X10Button" to="." method="_on_x10_button_toggled"]

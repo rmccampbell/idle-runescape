@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/Flute_Salad.ogg-bc129088d8b3c4e4ffd17bbed1b75
 
 [params]
 
-loop=false
+loop=true
 loop_offset=0
 bpm=0
 beat_count=0

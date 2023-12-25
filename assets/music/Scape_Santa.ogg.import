@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/Scape_Santa.ogg-857be00d7dd91c998d98949ecafbd
 
 [params]
 
-loop=false
+loop=true
 loop_offset=0
 bpm=0
 beat_count=0
