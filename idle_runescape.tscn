@@ -138,18 +138,25 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Face" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 821.0
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -459.0
 offset_top = 175.0
-offset_right = 999.0
+offset_right = -281.0
 offset_bottom = 353.0
+grow_horizontal = 0
 texture = ExtResource("9_5ui7i")
 
 [node name="StatsContainerOuter" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_left = 1009.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.998
+anchor_right = 0.998
+offset_left = -268.44
 offset_top = 397.0
-offset_right = 1276.0
+offset_right = -1.44006
 offset_bottom = 693.0
 
 [node name="StatsLabel" type="Label" parent="StatsContainerOuter"]
@@ -312,11 +319,15 @@ text = "0xp"
 clip_text = true
 
 [node name="InventoryContainerOuter" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_left = 779.0
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -501.0
 offset_top = 397.0
-offset_right = 983.0
+offset_right = -297.0
 offset_bottom = 657.0
+grow_horizontal = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="InventoryContainerOuter"]
 layout_mode = 2
@@ -434,11 +445,15 @@ horizontal_alignment = 2
 layout_mode = 2
 
 [node name="EquipContainer" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_left = 1061.0
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -219.0
 offset_top = 159.0
-offset_right = 1211.0
+offset_right = -69.0
 offset_bottom = 361.0
+grow_horizontal = 0
 
 [node name="Label" type="Label" parent="EquipContainer"]
 layout_mode = 2
