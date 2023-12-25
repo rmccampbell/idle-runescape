@@ -542,5 +542,19 @@ autostart = true
 stream = ExtResource("21_sdine")
 autoplay = true
 
+[node name="SaveButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -251.0
+offset_top = 54.0
+offset_right = -122.0
+offset_bottom = 111.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 60
+text = "Save"
+
 [connection signal="toggled" from="InventoryContainerOuter/HBoxContainer/X10Button" to="." method="_on_x10_button_toggled"]
 [connection signal="timeout" from="HealTimer" to="." method="_on_heal_timer_timeout"]

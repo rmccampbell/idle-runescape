@@ -16,7 +16,7 @@ extends Control
 @export var firemaking_lvl: int = 1
 @export var fishing_lvl: int = 1
 
-@export var hp: int = 10
+@export var hp_val: int = 10
 
 @export var inv_coins: int = 0
 @export var inv_ores: int = 0
@@ -36,6 +36,7 @@ extends Control
 @export var item_mult: int = 1
 
 func _ready():
+	load_game()
 	%AttackButton.pressed.connect(_on_attack_button_pressed)
 	%MiningButton.pressed.connect(_on_mining_button_pressed)
 	%SmithingButton.pressed.connect(_on_smithing_button_pressed)
@@ -47,6 +48,7 @@ func _ready():
 	%SellBarsButton.pressed.connect(_on_sell_bars_button_pressed)
 	%SellLogsButton.pressed.connect(_on_sell_logs_button_pressed)
 	%EatButton.pressed.connect(_on_eat_button_pressed)
+	%SaveButton.pressed.connect(_on_save_button_pressed)
 	#%HealTimer.timeout.connect(_on_heal_timer_timeout)
 	#%X10Button.toggled.connect(_on_x10_button_toggled)
 
@@ -60,7 +62,7 @@ func _process(_delta):
 	%FiremakingXpLabel.text = "%dxp" % firemaking_xp
 	%FishingXpLabel.text = "%dxp" % fishing_xp
 
-	%HpValLabel.text = "%02d/%02d" % [hp, hp_lvl]
+	%HpValLabel.text = "%02d/%02d" % [hp_val, hp_lvl]
 	%AttackValLabel.text = "%02d" % attack_lvl
 	%MiningValLabel.text = "%02d" % mining_lvl
 	%SmithingValLabel.text = "%02d" % smithing_lvl
@@ -88,7 +90,7 @@ func _on_attack_button_pressed():
 	var monster = Data.MONSTER_TABLE[monster_ind]
 	var equip = Data.EQUIP_TABLE[equip_ind]
 	var damage = int(monster.damage * (1. - equip.defense))
-	if hp > damage:
+	if hp_val > damage:
 		var xp = roundi(monster.hp*4/3.)
 		attack_xp += xp
 		attack_lvl = Data.xp_to_level(attack_xp)
@@ -96,7 +98,7 @@ func _on_attack_button_pressed():
 		hp_lvl = Data.xp_to_level(hp_xp)
 		monster_ind = Data.find_monster(attack_lvl)
 		inv_coins += monster.coins
-		hp -= damage
+		hp_val -= damage
 
 func _on_mining_button_pressed():
 	var ore = Data.MINING_TABLE[mining_act_ind]
@@ -163,14 +165,62 @@ func _on_sell_logs_button_pressed():
 		inv_coins += num
 
 func _on_eat_button_pressed():
-	var num = min(item_mult, inv_food, hp_lvl - hp)
+	var num = min(item_mult, inv_food, hp_lvl - hp_val)
 	if num:
 		inv_food -= num
-		hp += num
+		hp_val += num
 
 func _on_heal_timer_timeout():
-	if hp < hp_lvl:
-		hp += 1
+	if hp_val < hp_lvl:
+		hp_val += 1
 
 func _on_x10_button_toggled(toggled_on: bool):
 	item_mult = 10 if toggled_on else 1
+
+func _on_save_button_pressed():
+	save_game()
+
+func save_game():
+	var data = {
+		'hp_xp': hp_xp,
+		'attack_xp': attack_xp,
+		'mining_xp': mining_xp,
+		'smithing_xp': smithing_xp,
+		'woodcutting_xp': woodcutting_xp,
+		'firemaking_xp': firemaking_xp,
+		'fishing_xp': fishing_xp,
+		'hp_lvl': hp_lvl,
+		'attack_lvl': attack_lvl,
+		'mining_lvl': mining_lvl,
+		'smithing_lvl': smithing_lvl,
+		'woodcutting_lvl': woodcutting_lvl,
+		'firemaking_lvl': firemaking_lvl,
+		'fishing_lvl': fishing_lvl,
+		'hp_val': hp_val,
+		'inv_coins': inv_coins,
+		'inv_ores': inv_ores,
+		'inv_bars': inv_bars,
+		'inv_logs': inv_logs,
+		'inv_food': inv_food,
+		'inv_glasses': inv_glasses,
+		'equip_ind': equip_ind,
+		'monster_ind': monster_ind,
+		'mining_act_ind': mining_act_ind,
+		'smithing_act_ind': smithing_act_ind,
+		'woodcutting_act_ind': woodcutting_act_ind,
+		'firemaking_act_ind': firemaking_act_ind,
+		'fishing_act_ind': fishing_act_ind,
+	}
+	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
+	save_file.store_line(JSON.stringify(data))
+	print('Game saved')
+
+func load_game():
+	var save_file = FileAccess.open("user://savegame.save", FileAccess.READ)
+	if not save_file:
+		print('Failed to open save file')
+		return
+	var data = JSON.parse_string(save_file.get_as_text())
+	for key in data:
+		set(key, data[key])
+	print('Game loaded')
