@@ -171,8 +171,8 @@ static func find_equip(smithing: int):
 	return find_at_most(EQUIP_LVL_TABLE, smithing)
 
 
-@warning_ignore("integer_division")
 static func format_num(x: int):
 	if x < 10_000:
 		return str(x)
-	return "%.02fk" % int(x/1000)
+	var prec = 2 if x < 100_000 else 1 if x < 1000_000 else 0
+	return "%.*fk" % [prec, x/1000.]

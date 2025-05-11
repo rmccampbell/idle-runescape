@@ -35,6 +35,17 @@ extends Control
 
 @export var item_mult: int = 1
 
+const ITEM_MULTS = [1, 10, 100]
+
+const AUTUMN_VOYAGE = "res://assets/music/Autumn_Voyage.ogg"
+const FLUTE_SALAD = "res://assets/music/Flute_Salad.ogg"
+const HARMONY = "res://assets/music/Harmony.ogg"
+const DREAM = "res://assets/music/Dream.ogg"
+const SEA_SHANTY2 = "res://assets/music/Sea_Shanty_2.ogg"
+const SCAPE_SANTA = "res://assets/music/Scape_Santa.ogg"
+const MAIN_SONGS = [AUTUMN_VOYAGE, FLUTE_SALAD, HARMONY, DREAM, SEA_SHANTY2]
+
+
 func _ready():
 	load_game()
 	%AttackButton.pressed.connect(_on_attack_button_pressed)
@@ -49,8 +60,11 @@ func _ready():
 	%SellLogsButton.pressed.connect(_on_sell_logs_button_pressed)
 	%EatButton.pressed.connect(_on_eat_button_pressed)
 	%SaveButton.pressed.connect(_on_save_button_pressed)
-	#%HealTimer.timeout.connect(_on_heal_timer_timeout)
-	#%X10Button.toggled.connect(_on_x10_button_toggled)
+	%ItemMultButton.item_selected.connect(_on_item_mult_button_item_selected)
+	%ItemMultButton.selected = ITEM_MULTS.find(item_mult)
+	# %ItemMultButton.toggled.connect(_on_item_mult_button_toggled)
+	# %HealTimer.timeout.connect(_on_heal_timer_timeout)
+	pick_music()
 
 
 func _process(_delta):
@@ -90,7 +104,14 @@ func _on_attack_button_pressed():
 	var monster = Data.MONSTER_TABLE[monster_ind]
 	var equip = Data.EQUIP_TABLE[equip_ind]
 	var damage = int(monster.damage * (1. - equip.defense))
-	if hp_val > damage:
+	var effective_hp = min(hp_val + inv_food, hp_lvl)
+	if effective_hp > damage:
+		if hp_val > damage:
+			hp_val -= damage
+		else:
+			inv_food -= damage - (hp_val - 1)
+			hp_val = 1
+
 		var xp = roundi(monster.hp*4/3.)
 		attack_xp += xp
 		attack_lvl = Data.xp_to_level(attack_xp)
@@ -98,7 +119,7 @@ func _on_attack_button_pressed():
 		hp_lvl = Data.xp_to_level(hp_xp)
 		monster_ind = Data.find_monster(attack_lvl)
 		inv_coins += monster.coins
-		hp_val -= damage
+
 
 func _on_mining_button_pressed():
 	var ore = Data.MINING_TABLE[mining_act_ind]
@@ -106,6 +127,7 @@ func _on_mining_button_pressed():
 	mining_lvl = Data.xp_to_level(mining_xp)
 	mining_act_ind = Data.find_skill_act(Data.MINING_LVL_TABLE, mining_lvl)
 	inv_ores += ore.value
+
 
 func _on_smithing_button_pressed():
 	var bar = Data.SMITHING_TABLE[smithing_act_ind]
@@ -117,12 +139,14 @@ func _on_smithing_button_pressed():
 		inv_ores -= bar.value
 		inv_bars += bar.value
 
+
 func _on_woodcutting_button_pressed():
 	var wood = Data.WOODCUTTING_TABLE[woodcutting_act_ind]
 	woodcutting_xp += wood.xp
 	woodcutting_lvl = Data.xp_to_level(woodcutting_xp)
 	woodcutting_act_ind = Data.find_skill_act(Data.WOODCUTTING_LVL_TABLE, woodcutting_lvl)
 	inv_logs += wood.value
+
 
 func _on_firemaking_button_pressed():
 	var wood = Data.FIREMAKING_TABLE[firemaking_act_ind]
@@ -132,12 +156,14 @@ func _on_firemaking_button_pressed():
 		firemaking_act_ind = Data.find_skill_act(Data.FIREMAKING_LVL_TABLE, firemaking_lvl)
 		inv_logs -= wood.value
 
+
 func _on_fishing_button_pressed():
 	var fish = Data.FISHING_TABLE[fishing_act_ind]
 	fishing_xp += fish.xp
 	fishing_lvl = Data.xp_to_level(fishing_xp)
 	fishing_act_ind = Data.find_skill_act(Data.FISHING_LVL_TABLE, fishing_lvl)
 	inv_food += fish.value
+
 
 func _on_beer_button_pressed():
 	@warning_ignore("integer_division")
@@ -146,11 +172,13 @@ func _on_beer_button_pressed():
 		inv_glasses += num
 		inv_coins -= 2*num
 
+
 func _on_sell_ores_button_pressed():
 	var num = min(item_mult, inv_ores)
 	if num:
 		inv_ores -= num
 		inv_coins += num
+
 
 func _on_sell_bars_button_pressed():
 	var num = min(item_mult, inv_bars)
@@ -158,11 +186,13 @@ func _on_sell_bars_button_pressed():
 		inv_bars -= num
 		inv_coins += num
 
+
 func _on_sell_logs_button_pressed():
 	var num = min(item_mult, inv_logs)
 	if num:
 		inv_logs -= num
 		inv_coins += num
+
 
 func _on_eat_button_pressed():
 	var num = min(item_mult, inv_food, hp_lvl - hp_val)
@@ -170,15 +200,37 @@ func _on_eat_button_pressed():
 		inv_food -= num
 		hp_val += num
 
+
+func _on_item_mult_button_item_selected(index: int):
+	item_mult = ITEM_MULTS[index]
+
+
+# func _on_item_mult_button_toggled(toggled_on: bool):
+# 	item_mult = 10 if toggled_on else 1
+
+
+func _on_save_button_pressed():
+	save_game()
+
+
 func _on_heal_timer_timeout():
 	if hp_val < hp_lvl:
 		hp_val += 1
 
-func _on_x10_button_toggled(toggled_on: bool):
-	item_mult = 10 if toggled_on else 1
 
-func _on_save_button_pressed():
-	save_game()
+func _on_music_player_finished():
+	pick_music()
+
+
+func pick_music():
+	var song: String
+	if Time.get_date_dict_from_system().month in [1, 12]:
+		song = SCAPE_SANTA
+	else:
+		song = MAIN_SONGS[randi() % len(MAIN_SONGS)]
+	%MusicPlayer.stream = load(song)
+	%MusicPlayer.play()
+
 
 func save_game():
 	var data = {
@@ -210,15 +262,20 @@ func save_game():
 		'woodcutting_act_ind': woodcutting_act_ind,
 		'firemaking_act_ind': firemaking_act_ind,
 		'fishing_act_ind': fishing_act_ind,
+		'item_mult': item_mult,
 	}
 	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
+	if not save_file:
+		print('Failed to write save file: ', error_string(FileAccess.get_open_error()))
+		return
 	save_file.store_line(JSON.stringify(data))
 	print('Game saved')
+
 
 func load_game():
 	var save_file = FileAccess.open("user://savegame.save", FileAccess.READ)
 	if not save_file:
-		print('Failed to open save file')
+		print('Failed to open save file: ', error_string(FileAccess.get_open_error()))
 		return
 	var data = JSON.parse_string(save_file.get_as_text())
 	for key in data:

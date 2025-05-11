@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cebwc8kj70yhr"]
+[gd_scene load_steps=22 format=3 uid="uid://cebwc8kj70yhr"]
 
 [ext_resource type="Theme" uid="uid://c7m84smbp6txn" path="res://assets/theme.tres" id="1_2meuk"]
 [ext_resource type="Texture2D" uid="uid://tcxnyv8erlkk" path="res://assets/RuneScape_2_logo.png" id="1_wc2h2"]
@@ -20,7 +20,6 @@
 [ext_resource type="Texture2D" uid="uid://csyrotmxgpsuj" path="res://assets/Bronze bar.png" id="16_qxehu"]
 [ext_resource type="Texture2D" uid="uid://bxf7omdwnqxvh" path="res://assets/Logs.png" id="17_b7bhd"]
 [ext_resource type="Texture2D" uid="uid://crsrscy3y83jt" path="res://assets/Raw shrimps.png" id="18_vkyi3"]
-[ext_resource type="AudioStream" uid="uid://bypvfbdwrh241" path="res://assets/music/Scape_Santa.ogg" id="21_sdine"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_yy5kp"]
 font = ExtResource("3_6eivg")
@@ -323,7 +322,7 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -501.0
+offset_left = -505.0
 offset_top = 397.0
 offset_right = -297.0
 offset_bottom = 657.0
@@ -339,11 +338,18 @@ theme_override_font_sizes/font_size = 65
 text = "Items"
 horizontal_alignment = 1
 
-[node name="X10Button" type="Button" parent="InventoryContainerOuter/HBoxContainer"]
+[node name="ItemMultButton" type="OptionButton" parent="InventoryContainerOuter/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-toggle_mode = true
-text = "10x"
+alignment = 1
+item_count = 3
+selected = 0
+popup/item_0/text = "1x"
+popup/item_0/id = 0
+popup/item_1/text = "10x"
+popup/item_1/id = 1
+popup/item_2/text = "100x"
+popup/item_2/id = 2
 
 [node name="InventoryContainer" type="GridContainer" parent="InventoryContainerOuter"]
 layout_mode = 2
@@ -355,7 +361,7 @@ text = "Coins"
 
 [node name="CoinsValLabel" type="Label" parent="InventoryContainerOuter/InventoryContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(75, 0)
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "99.99k"
 horizontal_alignment = 2
@@ -369,7 +375,7 @@ text = "Ores"
 
 [node name="OresValLabel" type="Label" parent="InventoryContainerOuter/InventoryContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(75, 0)
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "0"
 horizontal_alignment = 2
@@ -386,7 +392,7 @@ text = "Bars"
 
 [node name="BarsValLabel" type="Label" parent="InventoryContainerOuter/InventoryContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(75, 0)
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "0"
 horizontal_alignment = 2
@@ -403,7 +409,7 @@ text = "Logs"
 
 [node name="LogsValLabel" type="Label" parent="InventoryContainerOuter/InventoryContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(75, 0)
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "0"
 horizontal_alignment = 2
@@ -420,7 +426,7 @@ text = "Food"
 
 [node name="FoodValLabel" type="Label" parent="InventoryContainerOuter/InventoryContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(75, 0)
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "0"
 horizontal_alignment = 2
@@ -436,7 +442,7 @@ text = "B.Glasses"
 
 [node name="BeerGlassesValLabel" type="Label" parent="InventoryContainerOuter/InventoryContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(75, 0)
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "0"
 horizontal_alignment = 2
@@ -449,10 +455,10 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -219.0
-offset_top = 159.0
-offset_right = -69.0
-offset_bottom = 361.0
+offset_left = -220.0
+offset_top = 160.0
+offset_right = -70.0
+offset_bottom = 360.0
 grow_horizontal = 0
 
 [node name="Label" type="Label" parent="EquipContainer"]
@@ -533,28 +539,27 @@ texture = ExtResource("18_vkyi3")
 expand_mode = 3
 stretch_mode = 4
 
-[node name="HealTimer" type="Timer" parent="."]
-unique_name_in_owner = true
-wait_time = 2.0
-autostart = true
-
-[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("21_sdine")
-autoplay = true
-
 [node name="SaveButton" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -251.0
-offset_top = 54.0
-offset_right = -122.0
-offset_bottom = 111.0
+offset_left = -220.0
+offset_top = 50.0
+offset_right = -70.0
+offset_bottom = 115.0
 grow_horizontal = 0
-theme_override_font_sizes/font_size = 60
+theme_override_font_sizes/font_size = 65
 text = "Save"
 
-[connection signal="toggled" from="InventoryContainerOuter/HBoxContainer/X10Button" to="." method="_on_x10_button_toggled"]
+[node name="HealTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 2.0
+autostart = true
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+
 [connection signal="timeout" from="HealTimer" to="." method="_on_heal_timer_timeout"]
+[connection signal="finished" from="MusicPlayer" to="." method="_on_music_player_finished"]
